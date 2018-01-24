@@ -1,5 +1,5 @@
-const loadUtils = require('loader-utils');
 const fs = require('fs');
+const config = require('./config');
 
 const STYLE_BLOCK_REGEX = /(?:<style>|\{% style %\})([\S\s]*?)(?:<\/style>|\{% endstyle %\})/g;
 const CSS_VAR_FUNC_REGEX = /var\(--(.*?)\)/g;
@@ -26,8 +26,11 @@ function parseCSSVariables(content) {
 }
 
 function SlateCSSLoader(source) {
-  const options = loadUtils.getOptions(this);
-  const cssVariablesPath = options.cssVariablesPath;
+  if (!config.cssVarLoaderEnable) {
+    return source;
+  }
+
+  const cssVariablesPath = config.cssVarLoaderLiquidPath;
 
   this.addDependency(cssVariablesPath);
   const cssVariablesContent = fs.readFileSync(cssVariablesPath, 'utf8');
