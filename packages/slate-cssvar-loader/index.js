@@ -12,16 +12,19 @@ class SlateException {
   }
 }
 
-function parseCSSVariables(content) {
+function parseCSSVariables(cssVariablesPaths) {
   const variables = {};
   let styleBlock;
-  while ((styleBlock = STYLE_BLOCK_REGEX.exec(content)) != null) {
-    let cssVariableDecl;
-    while ((cssVariableDecl = CSS_VAR_DECL_REGEX.exec(styleBlock)) != null) {
-      const [, cssVariable, liquidVariable] = cssVariableDecl;
-      variables[cssVariable] = liquidVariable;
+  cssVariablesPaths.forEach(cssVariablesPath => {
+    const content = fs.readFileSync(cssVariablesPath, 'utf8');
+    while ((styleBlock = STYLE_BLOCK_REGEX.exec(content)) != null) {
+      let cssVariableDecl;
+      while ((cssVariableDecl = CSS_VAR_DECL_REGEX.exec(styleBlock)) != null) {
+        const [, cssVariable, liquidVariable] = cssVariableDecl;
+        variables[cssVariable] = liquidVariable;
+      }
     }
-  }
+  });
   return variables;
 }
 
@@ -30,11 +33,10 @@ function SlateCSSLoader(source) {
     return source;
   }
 
-  const cssVariablesPath = config.cssVarLoaderLiquidPath;
+  const cssVariablesPaths = config.cssVarLoaderLiquidPath;
 
-  this.addDependency(cssVariablesPath);
-  const cssVariablesContent = fs.readFileSync(cssVariablesPath, 'utf8');
-  const variables = parseCSSVariables(cssVariablesContent);
+  cssVariablesPaths.forEach(filePath => this.addDependency(filePath));
+  const variables = parseCSSVariables(cssVariablesPaths);
 
   const result = source.replace(CSS_VAR_FUNC_REGEX, (match, cssVariable) => {
     if (!variables[cssVariable]) {

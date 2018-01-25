@@ -10,10 +10,10 @@ module.exports = slateConfig.generate({
     },
     {
       id: 'cssVarLoaderLiquidPath',
-      default: slateConfig.resolveTheme('src/snippets/css-variables.liquid'),
+      default: [slateConfig.resolveTheme('src/snippets/css-variables.liquid')],
       description:
-        'A path to the liquid file where css variables are associated to their liquid variable',
-      type: 'string',
+        'A array of string paths to liquid files that associate css variables to liquid variables',
+      type: 'object',
     },
   ],
 });
