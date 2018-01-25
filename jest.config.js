@@ -5,5 +5,6 @@ module.exports = {
     'packages/slate-tools/src/commands/test.js',
     '__tests__/fixtures/',
     '__tests__/helpers',
+    'packages/slate-cssvar-loader/__tests__/compiler.js',
   ],
 };

@@ -4,6 +4,6 @@ module.exports = {
   cssVarLoaderEnable: true,
   cssVarLoaderLiquidPath: path.resolve(
     __dirname,
-    '../tests/fixtures/css-variables.liquid',
+    '../__tests__/fixtures/css-variables.liquid',
   ),
 };
